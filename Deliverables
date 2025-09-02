@@ -1,0 +1,86 @@
+1. Github Repo Link
+https://github.com/Shiven14/shop-easy
+2. Git commands I used and why
+mkdir shop-easy && cd shop-easy
+
+- made a clean folder for the project.
+cat > spec.txt <<'EOF'
+Welcome to ShopEasy.
+Cart totals are shown in cents.
+Discounts apply before tax.
+Shipping cost is $5 flat.
+Promo codes are case-sensitive.
+Thank you for shopping!
+EOF
+
+- created the spec.txt file with the required text.
+git init
+git add spec.txt
+git commit -m "Add spec.txt with ShopEasy specifications"
+
+- initialized git, staged the file, and committed it.
+git branch -M main
+git remote add origin https://github.com/Shiven14/shop-easy.git
+git push -u origin main
+
+- set up the remote repo and pushed the main branch.
+git checkout -b A
+sed -i '' '2s/.*/Cart totals are shown in dollars (rounded)./' spec.txt
+git add spec.txt
+git commit -m "A: show totals in dollars (rounded)"
+git push -u origin A
+git checkout main
+
+- made branch A, changed line 2 to the dollars version, committed, pushed, then went back to main.
+git checkout -b B
+sed -i '' '2s/.*/Cart totals are shown in cents and displayed as $X.XX./' spec.txt
+git add spec.txt
+git commit -m 'B: cents displayed as $X.XX'
+git push -u origin B
+git checkout main
+
+- made branch B from main, changed line 2 to the cents/$X.XX version, committed, pushed, then switched back.
+git merge A -m "Merge branch A into main"
+git push
+
+-merged branch A into main (fast-forward).
+git merge B
+git status
+cat spec.txt
+
+- tried merging B, saw the merge conflict, and opened the file to look at the conflict markers.
+cat > spec.txt <<'EOF'
+Welcome to ShopEasy.
+Cart totals are shown in dollars (rounded) and displayed as $X.XX.
+Discounts apply before tax.
+Shipping cost is $5 flat.
+Promo codes are case-sensitive.
+Thank you for shopping!
+EOF
+
+git add spec.txt
+git commit -m "Resolve conflict on line 2: combine A and B"
+git push
+
+- rewrote the file with a combined version of the line, added it, committed, and pushed the final result.
+
+3. Why there was a merge conflict
+Because both branch A and branch B edited the same exact line in spec.txt (line 2). Git couldn’t automatically pick which change to keep, so it marked the conflict in the file for me to fix manually.
+
+4. How I resolved the conflict
+I opened the file and saw the conflict markers. Then I deleted the markers and replaced both versions with one combined version: Cart totals are shown in dollars (rounded) and displayed as $X.XX. After that I staged the file with git add, committed with a clear message, and pushed to GitHub.
+
+5. Commit messages I used
+Add spec.txt with ShopEasy specifications
+
+
+A: show totals in dollars (rounded)
+
+
+B: cents displayed as $X.XX
+
+
+Merge branch A into main
+
+
+Resolve conflict on line 2: combine A and B
